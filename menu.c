@@ -23,7 +23,10 @@ void Menu_Draw(struct Game *game) {
 //PRZYCISKI//
     if(game->gamestate==0){
         al_draw_bitmap_region(game->menu.buttons, 0,0,   195,43,   635,41,  0); //new game
-        al_draw_bitmap_region(game->menu.buttons, 0,43,  195,43,   635,119, 0); //resume game
+        if(game->play.dragon_lives>0)
+            al_draw_bitmap_region(game->menu.buttons, 0,43,  195,43,   635,119, 0); //resume game
+        else
+            al_draw_bitmap_region(game->menu.buttons, 0,413,  195,43,   635,119, 0); //resume game przygaszony
         al_draw_bitmap_region(game->menu.buttons, 0,86,  195,43,   635,197, 0); //scores
         al_draw_bitmap_region(game->menu.buttons, 0,129, 195,43,   635,275, 0); //quit
     }

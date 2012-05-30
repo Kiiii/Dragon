@@ -118,8 +118,7 @@ void Play_Game(struct Game *game)   {
     else if(game->play.down==true && game->play.dragon_lives>0) al_draw_bitmap_region(game->play.dragon,   152, 0,   152,199,   0,game->play.dragon_pos_y,  0);
     //al_draw_rectangle(game->play.dragon_pos_x-70,game->play.dragon_pos_y+90, game->play.dragon_pos_x+15,game->play.dragon_pos_y+115, al_map_rgb(255,0,0),1); //prostokątna ramka od smoka - kolizja z mąką i widłami
     if(game->play.dragon_floured==true){
-        //al_draw_bitmap_region(game->play.fodder,   245,0,   48,38,   game->play.dragon_pos_x-20,game->play.dragon_pos_y+80, 0);
-        al_draw_tinted_bitmap_region(game->play.fodder,     al_map_rgba_f(0.5, 0.5, 0.5, 0.5),    245,0,   48,38,   game->play.dragon_pos_x-20,game->play.dragon_pos_y+80, 0);
+        al_draw_tinted_bitmap_region(game->play.fodder, al_map_rgba_f(0.5,0.5,0.5,0.5),  245,0,   48,38,   game->play.dragon_pos_x-20,game->play.dragon_pos_y+80, 0);
     }
 
 /*PRZESZKODY LATAJĄCE*/
@@ -143,7 +142,7 @@ void Play_Game(struct Game *game)   {
                 //al_draw_bitmap_region(game->play.fodder,   296,0,   21,18,   otmp->x3,otmp->y3,  0);
                 al_draw_rotated_bitmap(game->play.pitchfork, 10,10, otmp->x3,otmp->y3,  otmp->a*otmp->a*(54.235),   0); //obrót o 25 całkiem ładny
                 otmp->x3-=8;
-               // printf("FORK: %f\t : %f\n",otmp->a,(otmp->a*otmp->a*(54.235) ));
+                //printf("%p\t : %f\n",otmp,otmp->a);
                 otmp->y3 = otmp->a * otmp->x3 + otmp->b;
              }
             otmp=otmp->next;
@@ -236,7 +235,7 @@ void Revive_Dragon(struct Game *game){
     game->play.info=true;
     game->play.dragon_lives-=1;
     game->play.i=0;
-    if(game->play.dragon_lives!=0) Absolute_Free(game);
+    if(game->play.dragon_lives!=0) Absolute_Free(game); //żeby foddery nie zniknęły, gdy smok padnie i zostanie się w stanie gry
    // al_rest(0.5);
     game->play.dragon_frame_x = 0;
     game->play.down = false;

@@ -72,7 +72,6 @@ int main(int argc, char **argv) {
         if(!al_reserve_samples(1)){fprintf(stderr, "failed to reserve samples!\n");return -1;}
         if(!al_install_keyboard()){fprintf(stderr, "failed to initialize keyboard!\n");return -1;}
         if(!al_install_mouse()){fprintf(stderr, "failed to initialize mouse!\n");return -1;}
-        al_init_font_addon();
         if(!al_init_ttf_addon()){fprintf(stderr, "failed to initialize fonts!\n");return -1;}
         al_init_primitives_addon();
 //////////////////////*    RÓŻNISTOŚCI  *//////////////////////
@@ -133,7 +132,7 @@ int main(int argc, char **argv) {
     /*  KLAWIATURA   */
         if(event.type == ALLEGRO_EVENT_KEY_DOWN){
             if(event.keyboard.keycode == ALLEGRO_KEY_ESCAPE)    break;  //ESC - wyjście z gry
-            if((event.keyboard.keycode == ALLEGRO_KEY_Q) && (game.gamestate==1 || game.gamestate==2))   game.gamestate=0;   //coś w rodzaju pauzy
+            if((event.keyboard.keycode == ALLEGRO_KEY_Q) && (game.gamestate==1 || game.gamestate==2))   {game.gamestate=0, Update_File(&game);}   //coś w rodzaju pauzy
         }
         al_get_keyboard_state(&game.keyboard);
         if (game.play.dragon_floured==false && (al_key_down(&game.keyboard, ALLEGRO_KEY_UP) || al_key_down(&game.keyboard, ALLEGRO_KEY_W)) && game.gamestate==1 && (event.type == ALLEGRO_EVENT_TIMER) && game.play.dragon_pos_y>-80){
@@ -239,6 +238,5 @@ return 0;
 *17. Dodawanie wyników - gdy się powtarza, do dopisuje jeszcze raz to samo.
 18. Blond-pastuchy rzucają owczym defragmentatorem [na jakiejś wysokości wybuch i rozpirza na czter owce].
 19. Przysick 'OPCJE' zamiast 'SCORED' i tam instrukcję gry też dać.
-20. Wyszarzyć/półprzezroczystość na resume game, gdy nie można resumować.
 
 */

@@ -209,7 +209,7 @@ void Free_Obstacles(struct Game *game){
         tmp=game->ofirst;
         game->oprev=NULL;
         while(tmp!=NULL){
-            if(tmp->state==0 || tmp->x1<-50 || tmp->y1<-40 || tmp->x3<-50) {
+            if((tmp->state!=1 && tmp->state!=2) || tmp->x1<-50 || tmp->y1<-40 || tmp->x3<-50) {
                 if(tmp==game->ofirst) {
                     game->ofirst=game->ofirst->next;
                     free(tmp);
@@ -234,6 +234,7 @@ void Collide_Obstacles(struct Game *game){
         struct Obstacles *tmp;
         tmp=game->ofirst;
         while(tmp!=NULL && game->play.dragon_lives>0){
+        printf("%p : %d\n",tmp,tmp->state);
          if(tmp->state==1){                                     //mąka
             if((tmp->x1 + 20 < game->play.dragon_pos_x-70+85) &&
                (tmp->x1 + 48 > game->play.dragon_pos_x-70) &&
@@ -242,8 +243,9 @@ void Collide_Obstacles(struct Game *game){
                 game->play.dragon_floured=true;
                 //game->play.dragon_frame_x=0;
                 game->play.i3=0;
+                tmp->state=0;
                 //Revive_Dragon(game);
-                tmp->state=0; //////////////////////////////////////////////////////////tu jedno =
+
             }
          }
          else if(tmp->state==2){                                //widły
@@ -251,8 +253,9 @@ void Collide_Obstacles(struct Game *game){
                (tmp->x3 + 7 > game->play.dragon_pos_x-70) &&
                (tmp->y3 + 2 < game->play.dragon_pos_y+90+25) &&
                (tmp->y3 + 7 > game->play.dragon_pos_y+90)  ){
+                //tmp->state=0; //to musi być przed Revive, bo tam był Absolute Free, a potem tmp->state chciało zmieniać i były śmieci
                 Revive_Dragon(game);
-                tmp->state=0;//////////////////////////////////////////////////////////tu jedno =
+                break;
             }
          }
             tmp=tmp->next;
