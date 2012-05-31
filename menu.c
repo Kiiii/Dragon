@@ -26,25 +26,37 @@ void Menu_Draw(struct Game *game) {
         if(game->play.dragon_lives>0)
             al_draw_bitmap_region(game->menu.buttons, 0,43,  195,43,   635,119, 0); //resume game
         else
-            al_draw_bitmap_region(game->menu.buttons, 0,413,  195,43,   635,119, 0); //resume game przygaszony
-        al_draw_bitmap_region(game->menu.buttons, 0,86,  195,43,   635,197, 0); //scores
+            al_draw_bitmap_region(game->menu.buttons, 0,215,  195,43,   635,119, 0); //resume game przygaszony
+        al_draw_bitmap_region(game->menu.buttons, 0,86,  195,43,   635,197, 0); //options
         al_draw_bitmap_region(game->menu.buttons, 0,129, 195,43,   635,275, 0); //quit
     }
 //WYNIKI//
     if(game->gamestate==2){
-        al_draw_bitmap_region(game->menu.buttons, 0,172, 195,198,   635,41, 0); //tablica wyników
-        al_draw_bitmap_region(game->menu.buttons, 0,250, 195,120,   635,132, 0); //tablica wyników - przedłużenie
-        al_draw_bitmap_region(game->menu.buttons, 0,370, 195,43,   635,275, 0); //przycisk 'menu'
-        al_draw_textf(game->sfont, al_map_rgb(70,64,58), 710,50, ALLEGRO_ALIGN_LEFT, "1.     %i", game->table[0]);
-        al_draw_textf(game->sfont, al_map_rgb(70,64,58), 710,70, ALLEGRO_ALIGN_LEFT, "2.     %i", game->table[1]);
-        al_draw_textf(game->sfont, al_map_rgb(70,64,58), 710,90, ALLEGRO_ALIGN_LEFT, "3.     %i", game->table[2]);
-        al_draw_textf(game->sfont, al_map_rgb(70,64,58), 710,110, ALLEGRO_ALIGN_LEFT, "4.     %i", game->table[3]);
-        al_draw_textf(game->sfont, al_map_rgb(70,64,58), 710,130, ALLEGRO_ALIGN_LEFT, "5.     %i", game->table[4]);
-        al_draw_textf(game->sfont, al_map_rgb(70,64,58), 710,150, ALLEGRO_ALIGN_LEFT, "6.     %i", game->table[5]);
-        al_draw_textf(game->sfont, al_map_rgb(70,64,58), 710,170, ALLEGRO_ALIGN_LEFT, "7.     %i", game->table[6]);
-        al_draw_textf(game->sfont, al_map_rgb(70,64,58), 710,190, ALLEGRO_ALIGN_LEFT, "8.     %i", game->table[7]);
-        al_draw_textf(game->sfont, al_map_rgb(70,64,58), 710,210, ALLEGRO_ALIGN_LEFT, "9.     %i", game->table[8]);
-        al_draw_textf(game->sfont, al_map_rgb(70,64,58), 710,230, ALLEGRO_ALIGN_LEFT, "10.   %i", game->table[9]);
+        al_draw_bitmap_region(game->menu.buttons, 195,0, 132,211,   698,41, 0); //tablica wyników
+
+        al_draw_bitmap_region(game->menu.buttons, 0,258, 498,211,   118,41, 0); //tablica informacji
+
+        al_draw_bitmap_region(game->menu.buttons, 0,172, 195,43,   635,275, 0); //przycisk 'menu'
+
+        //al_draw_textf(game->sfont, al_map_rgb(70,64,58), 737,50, ALLEGRO_ALIGN_LEFT, "1.     %i", game->table[0]);
+        al_draw_textf(game->sfont, al_map_rgb(70,64,58), 737,84,  ALLEGRO_ALIGN_LEFT, "1.     %i", game->table[0]); // stara poprawiona wysokość = 77 i co 20
+        al_draw_textf(game->sfont, al_map_rgb(70,64,58), 737,104, ALLEGRO_ALIGN_LEFT, "2.     %i", game->table[1]);
+        al_draw_textf(game->sfont, al_map_rgb(70,64,58), 737,124, ALLEGRO_ALIGN_LEFT, "3.     %i", game->table[2]);
+        al_draw_textf(game->sfont, al_map_rgb(70,64,58), 737,144, ALLEGRO_ALIGN_LEFT, "4.     %i", game->table[3]);
+        al_draw_textf(game->sfont, al_map_rgb(70,64,58), 737,164, ALLEGRO_ALIGN_LEFT, "5.     %i", game->table[4]);
+        al_draw_textf(game->sfont, al_map_rgb(70,64,58), 737,184, ALLEGRO_ALIGN_LEFT, "6.     %i", game->table[5]);
+        al_draw_textf(game->sfont, al_map_rgb(70,64,58), 737,204, ALLEGRO_ALIGN_LEFT, "7.     %i", game->table[6]);
+        al_draw_textf(game->sfont, al_map_rgb(70,64,58), 737,224, ALLEGRO_ALIGN_LEFT, "8.     %i", game->table[7]);
+
+        al_draw_textf(game->sfont, al_map_rgb(70,64,58), 138,61,  ALLEGRO_ALIGN_LEFT, "Press         or          to move up and         or          to move down.");
+        al_draw_textf(game->sfont, al_map_rgb(70,64,58), 138,81,  ALLEGRO_ALIGN_LEFT, "Press                    or right click mouse to fire a fiery bullet!");
+        al_draw_textf(game->sfont, al_map_rgb(70,64,58), 138,101, ALLEGRO_ALIGN_LEFT, "To pause game or enter menu press          .");
+        //al_draw_textf(game->sfont, al_map_rgb(70,64,58), 138,121, ALLEGRO_ALIGN_LEFT, "");
+        al_draw_textf(game->sfont, al_map_rgb(70,64,58), 138,141, ALLEGRO_ALIGN_LEFT, "You've got three lives.");
+        al_draw_textf(game->sfont, al_map_rgb(70,64,58), 138,161, ALLEGRO_ALIGN_LEFT, "Avoid thrown pitchforks - they will kill you!");
+        al_draw_textf(game->sfont, al_map_rgb(70,64,58), 138,181, ALLEGRO_ALIGN_LEFT, "Flying into a cloud of flour disables you for a while.");
+        al_draw_textf(game->sfont, al_map_rgb(70,64,58), 138,201, ALLEGRO_ALIGN_LEFT, "Do not fly too low - you will fall and die.");
+        al_draw_textf(game->sfont, al_map_rgb(70,64,58), 138,221, ALLEGRO_ALIGN_LEFT, "Shepherd boys fire exploding sheep defragmentators!");
     }
 //BITMAPA KURSORA//
     al_draw_bitmap(game->menu.cursor,game->pos_x, game->pos_y, 0);
@@ -67,11 +79,11 @@ void Update_File(struct Game *game) {
     int i,tmp,x=game->play.score;
     FILE *config_file;
     config_file=fopen("game.ini","r");
-    for(i=0; i<10; i++)
+    for(i=0; i<8; i++)
         fscanf(config_file,"%d", &(game->table[i]));
     fclose(config_file);
 
-    for(i=0; i<10; i++){
+    for(i=0; i<8; i++){
         if(x == game->table[i]) break;
         else if(x > game->table[i]){
             tmp=game->table[i];
@@ -80,7 +92,7 @@ void Update_File(struct Game *game) {
         }
     }
     config_file=fopen("game.ini","w");
-    for(i=0; i<10; i++)
+    for(i=0; i<8; i++)
         fprintf(config_file,"%d\n",game->table[i]);
     fclose(config_file);
 }

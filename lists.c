@@ -137,6 +137,7 @@ void Burn_Fodder(struct Game *game)   {
                     game->play.score_huts+=3;
                 else if(ftmp->lives==0)
                     game->play.score_villagers++;
+                break;
             }
             tmp=tmp->next;
         }

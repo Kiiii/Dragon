@@ -67,7 +67,7 @@ struct Game {
     ALLEGRO_EVENT_QUEUE *queue;
     ALLEGRO_FONT *sfont;
     int WIDTH, HEIGHT, pos_x, pos_y, gamestate, fireonce;
-    int table[10];
+    int table[8];
     struct ALLEGRO_KEYBOARD_STATE keyboard;
     struct Menu menu;
     struct Play play;
