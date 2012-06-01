@@ -36,7 +36,7 @@ void Play_Game(struct Game *game)   {
             if(ftmp->type==0) {  //uzbrojony
                 al_draw_bitmap_region(game->play.fodder,   game->play.fodder_x, 0,   25,22,   ftmp->x1,ftmp->y1,  0);
                 //al_draw_rectangle(ftmp->x1,ftmp->y1,ftmp->x2,ftmp->y2, al_map_rgb(0,0,0), 1);
-                if((rand() % 100  < 3) && ftmp->x1>game->play.dragon_pos_x+450 && game->play.dragon_lives>0)
+                if(((rand() % 100 < 2)||(rand() % 100 == 8)||(rand() % 100 == 50)) && ftmp->x1>game->play.dragon_pos_x+450 && game->play.dragon_lives>0)
                     Add_Obstacles(game,ftmp->x1,ftmp->y1,2,game->play.dragon_pos_x+15,game->play.dragon_pos_y+110);
             }
             if(ftmp->type==1) {  //zwykły
@@ -69,7 +69,7 @@ void Play_Game(struct Game *game)   {
                 if(rand() % 100  < 1)
                     Add_Obstacles(game,ftmp->x1,ftmp->y1,1,0,0);
             }
-            al_draw_rectangle(ftmp->x1-30,ftmp->y1-30,ftmp->x2+30,ftmp->y2+30, al_map_rgb(0,255,0), 1); //zielony
+            //al_draw_rectangle(ftmp->x1-30,ftmp->y1-30,ftmp->x2+30,ftmp->y2+30, al_map_rgb(0,255,0), 1); //zielony - rozmiary jak w sprawdzaniu kolizji
             if(game->play.dragon_lives>0){
                 ftmp->x1-=5;
                 ftmp->x2-=5;
@@ -113,15 +113,15 @@ void Play_Game(struct Game *game)   {
                 stmp=stmp->next;
             }
     }
-
 /*ANIMACJA SMOKA*/
     if(game->play.down==false && game->play.dragon_lives>0) al_draw_bitmap_region(game->play.dragon,   game->play.dragon_frame_x, 0,   152, 199,   0,game->play.dragon_pos_y,  0);
     else if(game->play.down==true && game->play.dragon_lives>0) al_draw_bitmap_region(game->play.dragon,   152, 0,   152,199,   0,game->play.dragon_pos_y,  0);
     //al_draw_rectangle(game->play.dragon_pos_x-70,game->play.dragon_pos_y+90, game->play.dragon_pos_x+15,game->play.dragon_pos_y+115, al_map_rgb(255,0,0),1); //prostokątna ramka od smoka - kolizja z mąką i widłami
     if(game->play.dragon_floured==true){
-        al_draw_tinted_bitmap_region(game->play.fodder, al_map_rgba_f(0.5,0.5,0.5,0.5),  245,0,   48,38,   game->play.dragon_pos_x-20,game->play.dragon_pos_y+80, 0);
+        al_draw_tinted_bitmap_region(game->play.fodder, al_map_rgba_f(0.5,0.5,0.5,0.5),  245,game->play.flour_y,   48,38,   game->play.dragon_pos_x-20,game->play.dragon_pos_y+80, 0);
+        al_draw_tinted_bitmap_region(game->play.fodder, al_map_rgba_f(0.5,0.5,0.5,0.5),  245,game->play.flour_y,   48,38,   game->play.dragon_pos_x-40,game->play.dragon_pos_y+78, 0);
+        al_draw_tinted_bitmap_region(game->play.fodder, al_map_rgba_f(0.5,0.5,0.5,0.5),  245,game->play.flour_y,   48,38,   game->play.dragon_pos_x-60,game->play.dragon_pos_y+80, 0);
     }
-
 /*PRZESZKODY LATAJĄCE*/
     if(game->ofirst){
         struct Obstacles *otmp;
@@ -137,13 +137,11 @@ void Play_Game(struct Game *game)   {
                 if(game->play.dragon_lives>0)
                     otmp->x1-=((2+rand() % 3));
                 otmp->y1-=2;
-                //printf("FLOU: %f\n",(game->WIDTH)+((((otmp->x1)-(game->WIDTH))*((otmp->x1)-(game->WIDTH)))*(-0.0003154) + ((otmp->x1)-(game->WIDTH))*0.020 -500));
             }
             else if(otmp->state==2){ //widły
                 //al_draw_bitmap_region(game->play.fodder,   296,0,   21,18,   otmp->x3,otmp->y3,  0);
                 al_draw_rotated_bitmap(game->play.pitchfork, 10,10, otmp->x3,otmp->y3,  otmp->a*otmp->a*(54.235),   0); //obrót o 25 całkiem ładny
                 otmp->x3-=8;
-                //printf("%p\t : %f\n",otmp,otmp->a);
                 otmp->y3 = otmp->a * otmp->x3 + otmp->b;
              }
             otmp=otmp->next;
@@ -170,9 +168,8 @@ void Play_Game(struct Game *game)   {
         al_draw_textf(game->sfont, al_map_rgb(70,64,58),  al_get_display_width(game->display)*0.5, al_get_display_height(game->display)*0.4, ALLEGRO_ALIGN_CENTRE, "%d life left!",game->play.dragon_lives);
     else if(game->play.dragon_lives==0)
         al_draw_textf(game->sfont, al_map_rgb(70,64,58),  al_get_display_width(game->display)*0.5, al_get_display_height(game->display)*0.4, ALLEGRO_ALIGN_CENTRE, "GAME OVER! Press 'Q' to enter menu.");
-//BITMAPA KURSORA//
+/*BITMAPA KURSORA*/
     al_draw_bitmap(game->menu.cursor,game->pos_x, game->pos_y, 0);
-
 }
 //==================================================== INCREMENT_ALL ========================================================//
 void Increment_All(struct Game *game){
@@ -181,19 +178,21 @@ if(game->gamestate==1){
     if(game->play.i2==6) {
         game->play.fodder_mill_y+=60;
         if(game->play.fodder_mill_y>=480) game->play.fodder_mill_y=0;
-        game->play.i2=0; }
 
-    if(game->play.dragon_lives>0){ //po zakończeniu żywota tło się nie przesuwa
+        if(game->play.dragon_lives>0){  game->play.flour_y+=38; //jeśli smok żyje, to zmienną od zmączenia inkrementuje
+            if(game->play.flour_y>=494) game->play.flour_y=0;
+        }
+        game->play.i2=0;
+    }
+    if(game->play.dragon_lives>0){          //po zakończeniu żywota tło się nie przesuwa
         if (game->play.for_mtn1 <= -948) game->play.for_mtn1=948;
         game->play.for_mtn1-=3;
         if (game->play.for_mtn2 <= -948) game->play.for_mtn2=948;
         game->play.for_mtn2-=3;
-
         game->play.for_grs1-=5; //trawa
         if (game->play.for_grs1 <= -950) game->play.for_grs1=950;
         game->play.for_grs2-=5;
         if (game->play.for_grs2 <= -950) game->play.for_grs2=950;
-
         game->menu.cldpos1-=(2); //zmiana pozycji chmur//
         if (game->menu.cldpos1<-1090)  game->menu.cldpos1=948;
         game->menu.cldpos2-=(2); //zmiana pozycji chmur//
@@ -208,21 +207,18 @@ if(game->gamestate==1){
                 game->play.dragon_frame_x=0;
                 if(game->play.info==true) game->play.info=false; //przerwanie wyświetlania infa o życiach
             }
-            game->play.flour_y+=38;
-            if(game->play.flour_y>=494) game->play.flour_y=0;
-
             game->play.i=0;
         }
     }
     else { //wolniejsza zmiana pozycji chmur, gdy się temu smoku padnie
-        game->menu.cldpos1-=(0.4); //zmiana pozycji chmur//
+        game->menu.cldpos1-=(0.4);
         if (game->menu.cldpos1<-1090)  game->menu.cldpos1=948;
-        game->menu.cldpos2-=(0.4); //zmiana pozycji chmur//
+        game->menu.cldpos2-=(0.4);
         if (game->menu.cldpos2<-700)  game->menu.cldpos2=948;
-        game->menu.cldpos3-=(0.4); //zmiana pozycji chmur//
+        game->menu.cldpos3-=(0.4);
         if (game->menu.cldpos3<-1000)  game->menu.cldpos3=948;
     }
-    if(game->play.dragon_floured==true){
+    if(game->play.dragon_floured==true){ //licznik iteracji zmączenia smoka
         game->play.dragon_pos_y+=1;
         game->play.i3+=1;
         if(game->play.i3>=150 && game->play.dragon_floured==true) game->play.dragon_floured=false; //przerwanie stanu zamączenia smoka
@@ -231,8 +227,8 @@ if(game->gamestate==1){
         Revive_Dragon(game);
     }
  }
- else if(game->gamestate!=1){   //nie jest stan gry
-    	game->menu.cldpos1-=(0.4); //zmiana pozycji chmur//
+ else if(game->gamestate!=1){   //nie jest stan aktulanej grywalności
+    	game->menu.cldpos1-=(0.4);
         if (game->menu.cldpos1<-1090)  game->menu.cldpos1=948;
         game->menu.cldpos2-=(0.4);
         if (game->menu.cldpos2<-700)  game->menu.cldpos2=948;
@@ -249,10 +245,9 @@ if(game->gamestate==1){
 //==================================================== REVIVE_DRAGON ========================================================//
 void Revive_Dragon(struct Game *game){
     game->play.info=true;
-   // game->play.dragon_lives-=1;
+    game->play.dragon_lives-=1;
     game->play.i=0;
-    //if(game->play.dragon_lives!=0) Absolute_Free(game); //żeby foddery nie zniknęły, gdy smok padnie i zostanie się w stanie gry
-
+    if(game->play.dragon_lives!=0) Absolute_Free(game); //żeby foddery nie zniknęły, gdy smok padnie i zostanie się w stanie gry
     game->play.dragon_frame_x = 0;
     game->play.down = false;
     game->play.dragon_floured=false;

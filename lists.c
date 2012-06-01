@@ -15,6 +15,13 @@ void Fire_Bullet(struct Game *game)    {
     tmp->x = tmp->fire_pos_x;
     tmp->y=(((tmp->a)*(tmp->x))+(tmp->b));
     tmp->next = NULL;
+    if(game->first==NULL)
+        game->first=tmp;
+    else {
+        tmp->next=game->first;
+        game->first=tmp;
+    }
+/*
     if(game->first==NULL){
         game->first=tmp;
         game->last=tmp;
@@ -22,7 +29,7 @@ void Fire_Bullet(struct Game *game)    {
     else {
         game->last->next=tmp;
         game->last=tmp;
-    }
+    }*/
 }
 //==================================================== FREE_FIRE ========================================================//
 void Free_Fire(struct Game *game)   {
@@ -33,6 +40,22 @@ void Free_Fire(struct Game *game)   {
     game->prev=NULL;
     while(tmp!=NULL){
         if(tmp->exist==3) {
+            if(tmp==game->first) {
+                game->first=game->first->next;
+                free(tmp);
+                tmp=game->first;
+            }
+            else {
+                game->prev->next=tmp->next;
+                free(tmp);
+                tmp=game->prev->next;
+            }
+        }
+        else {
+            game->prev=tmp;
+            tmp=tmp->next;
+        }
+       /* if(tmp->exist==3) {
             if(tmp==game->first) {
                 game->first=game->first->next;
                 free(tmp);
@@ -53,7 +76,7 @@ void Free_Fire(struct Game *game)   {
         else {
             game->prev=tmp;
             tmp=tmp->next;
-        }
+        }*/
     }
   }
 }
@@ -78,14 +101,20 @@ void Create_Fodder(struct Game *game)   {
         tmp->y1 = tmp->y2-60;    }
         tmp->next = NULL;
 
-    if(game->ffirst==NULL){
+    if(game->ffirst==NULL)
+        game->ffirst=tmp;
+    else {
+        tmp->next=game->ffirst;
+        game->ffirst=tmp;
+    }
+  /*  if(game->ffirst==NULL){
         game->ffirst=tmp;
         game->flast=tmp;
     }
     else {
         game->flast->next=tmp;
         game->flast=tmp;
-    }
+    }*/
 }
 //==================================================== FREE_FODDER ========================================================//
 void Free_Fodder(struct Game *game)   {
@@ -96,7 +125,22 @@ void Free_Fodder(struct Game *game)   {
     game->fprev=NULL;
     while(tmp){
         if(tmp->x2<0 || tmp->lives<=0){
-           if(tmp==game->ffirst) {
+            if(tmp==game->ffirst) {
+                game->ffirst=game->ffirst->next;
+                free(tmp);
+                tmp=game->ffirst;
+            }
+            else {
+                game->fprev->next=tmp->next;
+                free(tmp);
+                tmp=game->fprev->next;
+                }
+        }
+        else {
+            game->fprev=tmp;
+            tmp=tmp->next;
+        }
+         /*  if(tmp==game->ffirst) {
                 game->ffirst=game->ffirst->next;
                 free(tmp);
                 tmp=game->ffirst;
@@ -116,7 +160,7 @@ void Free_Fodder(struct Game *game)   {
         else {
             game->fprev=tmp;
             tmp=tmp->next;
-        }
+        }*/
     }
   }
 }
@@ -124,11 +168,9 @@ void Free_Fodder(struct Game *game)   {
 void Burn_Fodder(struct Game *game)   {
 //SPRAWDZA KOLIZJE POCISKÓW Z WIEŚNIAKAMI//
     struct Fire *tmp;
-    tmp=game->first;
-
+    //tmp=game->first;
     struct Fodder *ftmp;
     ftmp=game->ffirst;
-
     while(ftmp!=NULL){
         tmp=game->first;
         while(tmp!=NULL){
@@ -137,14 +179,10 @@ void Burn_Fodder(struct Game *game)   {
                 if(ftmp->type==2 && ftmp->lives==0)     game->play.score_sheeps+=2;
                 else if((ftmp->type==3 || ftmp->type==4) && ftmp->lives==0)     game->play.score_huts+=3;
                 else if(ftmp->lives==0)     game->play.score_villagers++;
-             // printf("%p\t%p\t%p\n",ftmp,game->ffirst,ftmp);
                 tmp->exist=2;
-                break;
             }
-            //printf("%p\t%p\t%p\n",tmp,game->first,ftmp);
             tmp=tmp->next;
         }
-       // printf("%p\t%p - wieśniak\n",ftmp,game->ffirst);
         ftmp=ftmp->next;
     }
 }
@@ -239,7 +277,6 @@ void Collide_Obstacles(struct Game *game){
         struct Obstacles *tmp;
         tmp=game->ofirst;
         while(tmp!=NULL && game->play.dragon_lives>0){
-        //printf("%p : %d\n",tmp,tmp->state);
          if(tmp->state==1){                                     //mąka
             if((tmp->x1 + 20 < game->play.dragon_pos_x-70+85) &&
                (tmp->x1 + 48 > game->play.dragon_pos_x-70) &&
@@ -255,7 +292,7 @@ void Collide_Obstacles(struct Game *game){
                (tmp->x3 + 7 > game->play.dragon_pos_x-70) &&
                (tmp->y3 + 2 < game->play.dragon_pos_y+90+25) &&
                (tmp->y3 + 7 > game->play.dragon_pos_y+90)  ){
-                //tmp->state=0; //to musi być przed Revive, bo tam był Absolute Free, a potem tmp->state chciało zmieniać i były śmieci
+                tmp->state=0; //to musi być przed Revive, bo tam był Absolute Free, a potem tmp->state chciało zmieniać i były śmieci
                 Revive_Dragon(game);
                 break;
             }
@@ -276,7 +313,7 @@ void Absolute_Free(struct Game *game){
         }
     game->first=NULL;
     game->prev=NULL;
-    game->last=NULL;
+   // game->last=NULL;
     }
 //USUWANIE DYMU//
     if(game->sfirst) {
@@ -299,7 +336,7 @@ void Absolute_Free(struct Game *game){
         }
     game->ffirst=NULL;
     game->fprev=NULL;
-    game->flast=NULL;
+   // game->flast=NULL;
     }
 //USUWANIE PRZESZKÓD LATAJĄCYCH//
     if(game->ofirst) {

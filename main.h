@@ -68,12 +68,12 @@ struct Game {
     ALLEGRO_FONT *sfont;
     int WIDTH, HEIGHT, pos_x, pos_y, fireonce;
     int gamestate; //0 = menu; 1 = gra; 2 = wyniki
-    int table[8]; //tablica wyników
+    int table[8];  //tablica wyników
     struct ALLEGRO_KEYBOARD_STATE keyboard;
     struct Menu menu;
     struct Play play;
-    struct Fire *first, *prev, *last;
-    struct Fodder *ffirst, *fprev, *flast;
+    struct Fire *first, *prev;
+    struct Fodder *ffirst, *fprev;
     struct Smoke *sfirst, *sprev;
     struct Obstacles *ofirst, *oprev;
 };

@@ -38,31 +38,19 @@ void New_Game(struct Game *game) {
     game->play.score_huts=0;
     game->play.dragon_pos_y = 176; //początkowa wysokość smoka
     game->play.dragon_pos_x = 127;   //stałe położenie smoka
-    game->play.dragon_lives = 0;   //stałe położenie smoka
+    game->play.dragon_lives = 0;   //smocze życia
     Absolute_Free(game);
 }
 //==================================================== MAIN ========================================================//
 int main(int argc, char **argv) {
     struct Game game;
-    game.WIDTH = 948;
-    game.HEIGHT = 593;
     bool FULLSCREEN = false;
     float FPS = 60;
-    srand(time(NULL));
-    game.gamestate=0;//stan gry -> 0 = menu; 1 = gra; 2 = wyniki
-    game.fireonce=0;
-
-    game.first=NULL; //fire
-    game.prev=NULL;
-    game.last=NULL;
-    game.sfirst=NULL; //smoke
-    game.sprev=NULL;
-    game.ffirst=NULL; //fodder
-    game.fprev=NULL;
-    game.flast=NULL;
-    game.ofirst=NULL; //obstacles -> widły i mąka
-    game.oprev=NULL;
-
+    game.WIDTH = 948; game.HEIGHT = 593;
+    srand(time(NULL));  game.fireonce=0;
+    game.gamestate=0;
+    game.first=NULL;  game.prev=NULL;      game.ffirst=NULL; game.fprev=NULL;
+    game.sfirst=NULL; game.sprev=NULL;     game.ofirst=NULL; game.oprev=NULL;
     New_Game(&game);
 //////////////////////*  INICJALIZACJE ALLEGRO  *//////////////////////
         if(!al_init()){al_show_native_message_box(game.display, "Error", "Error", "Failed to initialize allegro!",NULL, ALLEGRO_MESSAGEBOX_ERROR); return 0; }
@@ -87,6 +75,7 @@ int main(int argc, char **argv) {
         al_register_event_source(game.queue, al_get_keyboard_event_source());
         al_register_event_source(game.queue, al_get_mouse_event_source());
         al_start_timer(game.timer);
+        al_hide_mouse_cursor(game.display);
 //////////////////////*   INICJALIZACJA BITMAP   *//////////////////////
     game.menu.buttons = al_load_bitmap("resources/1_buttons.png");
     game.menu.cloud = al_load_bitmap("resources/1_clouds.png");
@@ -106,8 +95,6 @@ int main(int argc, char **argv) {
     game.play.dragon = al_load_bitmap("resources/2_smok.png");
     game.play.trees1 = al_load_bitmap("resources/2_trees1.png");
     game.play.trees2 = al_load_bitmap("resources/2_trees2.png");
-
-    al_hide_mouse_cursor(game.display);
 //////////////////////*   GŁÓWNA PĘTLA   *//////////////////////
     while(1){
         ALLEGRO_EVENT event;
