@@ -76,8 +76,8 @@ void Create_Fodder(struct Game *game)   {
     else {                  //wiatrak
         tmp->x2 = tmp->x1+63;
         tmp->y1 = tmp->y2-60;    }
-
         tmp->next = NULL;
+
     if(game->ffirst==NULL){
         game->ffirst=tmp;
         game->flast=tmp;
@@ -122,25 +122,29 @@ void Free_Fodder(struct Game *game)   {
 }
 //==================================================== BURN_FODDER ========================================================//
 void Burn_Fodder(struct Game *game)   {
+//SPRAWDZA KOLIZJE POCISKÓW Z WIEŚNIAKAMI//
     struct Fire *tmp;
     tmp=game->first;
+
     struct Fodder *ftmp;
     ftmp=game->ffirst;
-    while(ftmp){
-        while(tmp){
+
+    while(ftmp!=NULL){
+        tmp=game->first;
+        while(tmp!=NULL){
             if((tmp->exist==1) && (ftmp->lives>0) && (tmp->x >= (ftmp->x1-30)) && (tmp->x <= (ftmp->x2+30)) && (tmp->y >= ftmp->y1-30) && (tmp->y <= ftmp->y2+30) ){
                 ftmp->lives-=1;
+                if(ftmp->type==2 && ftmp->lives==0)     game->play.score_sheeps+=2;
+                else if((ftmp->type==3 || ftmp->type==4) && ftmp->lives==0)     game->play.score_huts+=3;
+                else if(ftmp->lives==0)     game->play.score_villagers++;
+             // printf("%p\t%p\t%p\n",ftmp,game->ffirst,ftmp);
                 tmp->exist=2;
-                if(ftmp->type==2 && ftmp->lives==0)
-                    game->play.score_sheeps+=2;
-                else if((ftmp->type==3 || ftmp->type==4) && ftmp->lives==0)
-                    game->play.score_huts+=3;
-                else if(ftmp->lives==0)
-                    game->play.score_villagers++;
                 break;
             }
+            //printf("%p\t%p\t%p\n",tmp,game->first,ftmp);
             tmp=tmp->next;
         }
+       // printf("%p\t%p - wieśniak\n",ftmp,game->ffirst);
         ftmp=ftmp->next;
     }
 }
@@ -235,18 +239,15 @@ void Collide_Obstacles(struct Game *game){
         struct Obstacles *tmp;
         tmp=game->ofirst;
         while(tmp!=NULL && game->play.dragon_lives>0){
-        printf("%p : %d\n",tmp,tmp->state);
+        //printf("%p : %d\n",tmp,tmp->state);
          if(tmp->state==1){                                     //mąka
             if((tmp->x1 + 20 < game->play.dragon_pos_x-70+85) &&
                (tmp->x1 + 48 > game->play.dragon_pos_x-70) &&
                (tmp->y1 + 20 < game->play.dragon_pos_y+90+25) &&
                (tmp->y1 + 38 > game->play.dragon_pos_y+90)  ){
                 game->play.dragon_floured=true;
-                //game->play.dragon_frame_x=0;
                 game->play.i3=0;
                 tmp->state=0;
-                //Revive_Dragon(game);
-
             }
          }
          else if(tmp->state==2){                                //widły

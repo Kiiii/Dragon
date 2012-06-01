@@ -50,7 +50,7 @@ struct Smoke {
 struct Play {
     ALLEGRO_BITMAP *background, *grass1, *grass2, *mtn1, *mtn2, *trees1, *trees2, *dragon, *score_table, *fire, *fodder, *pitchfork;
     ALLEGRO_FONT *total_score;
-    float for_mtn1, for_mtn2, for_grs1, for_grs2, dragon_frame_x, dragon_pos_y, dragon_pos_x, fire_pos_x, fire_pos_y, fodder_x, fodder_mill_y, flour_y;//, minus;
+    float for_mtn1, for_mtn2, for_grs1, for_grs2, dragon_frame_x, dragon_pos_y, dragon_pos_x, fire_pos_x, fire_pos_y, fodder_x, fodder_mill_y, flour_y;
     int i, i2,  i3, score, score_villagers, score_sheeps, score_huts, dragon_lives;
     bool down, info, dragon_floured;
 };
@@ -66,8 +66,9 @@ struct Game {
     ALLEGRO_TIMER *timer;
     ALLEGRO_EVENT_QUEUE *queue;
     ALLEGRO_FONT *sfont;
-    int WIDTH, HEIGHT, pos_x, pos_y, gamestate, fireonce;
-    int table[8];
+    int WIDTH, HEIGHT, pos_x, pos_y, fireonce;
+    int gamestate; //0 = menu; 1 = gra; 2 = wyniki
+    int table[8]; //tablica wyników
     struct ALLEGRO_KEYBOARD_STATE keyboard;
     struct Menu menu;
     struct Play play;

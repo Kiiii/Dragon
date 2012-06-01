@@ -49,7 +49,7 @@ int main(int argc, char **argv) {
     bool FULLSCREEN = false;
     float FPS = 60;
     srand(time(NULL));
-    game.gamestate=0;//stan gry -> 0 = menu; 1 = gra; 2 = wyniki//8
+    game.gamestate=0;//stan gry -> 0 = menu; 1 = gra; 2 = wyniki
     game.fireonce=0;
 
     game.first=NULL; //fire
@@ -114,6 +114,7 @@ int main(int argc, char **argv) {
         al_wait_for_event(game.queue, &event);
         if((game.gamestate==0 || game.gamestate==2) && (event.type == ALLEGRO_EVENT_TIMER) && (al_is_event_queue_empty(game.queue))) {
             Menu_Draw(&game);   //odświeżanie grafiki menu
+            Increment_All(&game);
             al_flip_display();
         }
         if((game.gamestate==1) && (event.type == ALLEGRO_EVENT_TIMER) && (al_is_event_queue_empty(game.queue))) {
@@ -133,6 +134,7 @@ int main(int argc, char **argv) {
         if(event.type == ALLEGRO_EVENT_KEY_DOWN){
             if(event.keyboard.keycode == ALLEGRO_KEY_ESCAPE)    break;  //ESC - wyjście z gry
             if((event.keyboard.keycode == ALLEGRO_KEY_Q) && (game.gamestate==1 || game.gamestate==2))   {game.gamestate=0, Update_File(&game);}   //coś w rodzaju pauzy
+         //  if(event.keyboard.keycode == ALLEGRO_KEY_PAD_PLUS) game.play.dragon_lives=888;
         }
         al_get_keyboard_state(&game.keyboard);
         if (game.play.dragon_floured==false && (al_key_down(&game.keyboard, ALLEGRO_KEY_UP) || al_key_down(&game.keyboard, ALLEGRO_KEY_W)) && game.gamestate==1 && (event.type == ALLEGRO_EVENT_TIMER) && game.play.dragon_pos_y>-80){
@@ -160,17 +162,17 @@ int main(int argc, char **argv) {
     //PRZYCISKI Z MENU//
         if(event.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN){
 /*START*/   if(((game.pos_x>=al_get_display_width(game.display)*0.67) && (game.pos_x<=al_get_display_width(game.display)*0.875)) && ((game.pos_y>=al_get_display_height(game.display)*0.0685/*2005*/) && (game.pos_y<=al_get_display_height(game.display)*0.14/*272*/)) && (game.gamestate==0)) {
-                if(event.mouse.button & 1)
+                if(event.mouse.button & 1){
                     New_Game(&game);
                     game.play.dragon_lives=3;
-                    game.gamestate=1;   }   //albo z tego zrobić coś, żeby zaczynało nową grę
+                    game.gamestate=1;   } }
 /*RESUME*/  else if(game.play.dragon_lives!=0 && ((game.pos_x>=al_get_display_width(game.display)*0.67) && (game.pos_x<=al_get_display_width(game.display)*0.875)) && ((game.pos_y>=al_get_display_height(game.display)*0.2005/*3325*/) && (game.pos_y<=al_get_display_height(game.display)*0.272/*404*/)) && (game.gamestate==0)) {
                 if(event.mouse.button & 1)
                     game.gamestate=1;  }    //to zmienić albo właśnie zostawić, jak jest
-/*SCORES*/  else if(((game.pos_x>=al_get_display_width(game.display)*0.67) && (game.pos_x<=al_get_display_width(game.display)*0.875)) && ((game.pos_y>=al_get_display_height(game.display)*0.3325/*4645*/) && (game.pos_y<=al_get_display_height(game.display)*0.404/*536*/)) && (game.gamestate==0))   {
-                if(event.mouse.button & 1)
+/*OPTIONS*/ else if(((game.pos_x>=al_get_display_width(game.display)*0.67) && (game.pos_x<=al_get_display_width(game.display)*0.875)) && ((game.pos_y>=al_get_display_height(game.display)*0.3325/*4645*/) && (game.pos_y<=al_get_display_height(game.display)*0.404/*536*/)) && (game.gamestate==0))   {
+                if(event.mouse.button & 1){
                     game.gamestate=2;
-                    Update_File(&game);  }
+                    Update_File(&game);  } }
 /*QUIT*/    else if(((game.pos_x>=al_get_display_width(game.display)*0.67) && (game.pos_x<=al_get_display_width(game.display)*0.875)) && ((game.pos_y>=al_get_display_height(game.display)*0.4645/*5925*/) && (game.pos_y<=al_get_display_height(game.display)*0.536/*668*/)) && (game.gamestate==0))   {
                 if(event.mouse.button & 1)
                     break;  }
@@ -184,9 +186,6 @@ int main(int argc, char **argv) {
         if((game.gamestate==1) && (al_is_event_queue_empty(game.queue))){
             Burn_Fodder(&game);
             Collide_Obstacles(&game);
-            //Free_Fire(&game);
-           // Free_Fodder(&game);
-           // Free_Smoke(&game);
         }
     }
 //////////////////////*   USUWANIE   *//////////////////////
@@ -237,6 +236,6 @@ return 0;
 *16. Odwrotnie dodawać na listę [najstaszy element=first].
 *17. Dodawanie wyników - gdy się powtarza, do dopisuje jeszcze raz to samo.
 18. Blond-pastuchy rzucają owczym defragmentatorem [na jakiejś wysokości wybuch i rozpirza na czter owce].
-19. Przysick 'OPCJE' zamiast 'SCORED' i tam instrukcję gry też dać.
+*19. Przysick 'OPCJE' zamiast 'SCORED' i tam instrukcję gry też dać.
 
 */

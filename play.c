@@ -69,6 +69,7 @@ void Play_Game(struct Game *game)   {
                 if(rand() % 100  < 1)
                     Add_Obstacles(game,ftmp->x1,ftmp->y1,1,0,0);
             }
+            al_draw_rectangle(ftmp->x1-30,ftmp->y1-30,ftmp->x2+30,ftmp->y2+30, al_map_rgb(0,255,0), 1); //zielony
             if(game->play.dragon_lives>0){
                 ftmp->x1-=5;
                 ftmp->x2-=5;
@@ -175,6 +176,7 @@ void Play_Game(struct Game *game)   {
 }
 //==================================================== INCREMENT_ALL ========================================================//
 void Increment_All(struct Game *game){
+if(game->gamestate==1){
     game->play.i2+=1;   //inkrementacja zmiennej od szybkości klatek animacji wiatraków
     if(game->play.i2==6) {
         game->play.fodder_mill_y+=60;
@@ -228,15 +230,29 @@ void Increment_All(struct Game *game){
     if(game->play.dragon_pos_y>(al_get_display_height(game->display)-200/*250*/) && game->play.dragon_lives>0){ //strata życia po wleceniu w drzewka
         Revive_Dragon(game);
     }
-
+ }
+ else if(game->gamestate!=1){   //nie jest stan gry
+    	game->menu.cldpos1-=(0.4); //zmiana pozycji chmur//
+        if (game->menu.cldpos1<-1090)  game->menu.cldpos1=948;
+        game->menu.cldpos2-=(0.4);
+        if (game->menu.cldpos2<-700)  game->menu.cldpos2=948;
+        game->menu.cldpos3-=(0.4);
+        if (game->menu.cldpos3<-1000)  game->menu.cldpos3=948;
+        if(game->play.i2==5){   //klatki animacji wiatraków
+            game->menu.mills_y+=85;
+            if (game->menu.mills_y>=680)  game->menu.mills_y=0;
+                game->play.i2=0;
+        }
+    game->play.i2++;
+ }
 }
 //==================================================== REVIVE_DRAGON ========================================================//
 void Revive_Dragon(struct Game *game){
     game->play.info=true;
-    game->play.dragon_lives-=1;
+   // game->play.dragon_lives-=1;
     game->play.i=0;
-    if(game->play.dragon_lives!=0) Absolute_Free(game); //żeby foddery nie zniknęły, gdy smok padnie i zostanie się w stanie gry
-   // al_rest(0.5);
+    //if(game->play.dragon_lives!=0) Absolute_Free(game); //żeby foddery nie zniknęły, gdy smok padnie i zostanie się w stanie gry
+
     game->play.dragon_frame_x = 0;
     game->play.down = false;
     game->play.dragon_floured=false;
