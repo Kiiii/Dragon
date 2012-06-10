@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="DRAGON" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="bin\Debug\DRAGON" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj\Debug\" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+			</Target>
+			<Target title="Release">
+				<Option output="bin\Release\GAME" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj\Release\" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+			<Add directory="allegro\include" />
+		</Compiler>
+		<Linker>
+			<Add library="allegro\lib\liballegro-5.0.5-monolith-mt.a" />
+			<Add library="allegro\lib\libvorbisfile-1.3.2-static-mt.a" />
+			<Add library="allegro\lib\libvorbis-1.3.2-static-mt.a" />
+			<Add library="allegro\lib\libdumb-0.9.3-static-mt.a" />
+			<Add library="allegro\lib\libFLAC-1.2.1-static-mt.a" />
+			<Add library="allegro\lib\libfreetype-2.4.4-static-mt.a" />
+			<Add library="allegro\lib\libogg-1.2.1-static-mt.a" />
+			<Add library="allegro\lib\libzlib-1.2.5-static-mt.a" />
+			<Add library="C:\Program Files (x86)\CodeBlocks\MinGW\lib\libuuid.a" />
+			<Add library="C:\Program Files (x86)\CodeBlocks\MinGW\lib\libkernel32.a" />
+			<Add library="C:\Program Files (x86)\CodeBlocks\MinGW\lib\libwinmm.a" />
+			<Add library="C:\Program Files (x86)\CodeBlocks\MinGW\lib\libpsapi.a" />
+			<Add library="C:\Program Files (x86)\CodeBlocks\MinGW\lib\libopengl32.a" />
+			<Add library="C:\Program Files (x86)\CodeBlocks\MinGW\lib\libglu32.a" />
+			<Add library="C:\Program Files (x86)\CodeBlocks\MinGW\lib\libuser32.a" />
+			<Add library="C:\Program Files (x86)\CodeBlocks\MinGW\lib\libcomdlg32.a" />
+			<Add library="C:\Program Files (x86)\CodeBlocks\MinGW\lib\libgdi32.a" />
+			<Add library="C:\Program Files (x86)\CodeBlocks\MinGW\lib\libshell32.a" />
+			<Add library="C:\Program Files (x86)\CodeBlocks\MinGW\lib\libole32.a" />
+			<Add library="C:\Program Files (x86)\CodeBlocks\MinGW\lib\libadvapi32.a" />
+			<Add library="C:\Program Files (x86)\CodeBlocks\MinGW\lib\libws2_32.a" />
+		</Linker>
+		<Unit filename="lists.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="lists.h" />
+		<Unit filename="main.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="main.h" />
+		<Unit filename="menu.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="menu.h" />
+		<Unit filename="play.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="play.h" />
+		<Extensions>
+			<code_completion />
+			<debugger />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

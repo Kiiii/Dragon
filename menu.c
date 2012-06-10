@@ -7,6 +7,7 @@
 
 //==================================================== DRAW_MENU ========================================================//
 void Menu_Draw(struct Game *game) {
+//RYSOWANIE TŁA Z MENU//
     al_draw_bitmap(game->menu.menu_bitmap,0,0,0);
     al_set_target_bitmap(al_get_backbuffer(game->display));
     al_draw_bitmap_region(game->menu.mills, 0,game->menu.mills_y,   82,85,   799,485,  0);
@@ -59,6 +60,7 @@ void Menu_Draw(struct Game *game) {
 }
 //==================================================== UPDATE_FILE ========================================================//
 void Update_File(struct Game *game) {
+//UAKTUALNIENIE PLIKU Z WYNIKAMI//
     int i,tmp,x=game->play.score;
     FILE *config_file;
     config_file=fopen("game.ini","r");

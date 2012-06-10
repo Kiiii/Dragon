@@ -4,12 +4,14 @@
 #include "play.h"
 
 void Fire_Bullet(struct Game *game);
-void Add_Smoke(struct Game *game, float x, float y);
-void Free_Smoke(struct Game *game);
-void Create_Fodder(struct Game *game);
-void Burn_Fodder(struct Game *game);
 void Free_Fire(struct Game *game);
+
+void Create_Fodder(struct Game *game);
 void Free_Fodder(struct Game *game);
+void Burn_Fodder(struct Game *game);
+
+void Add_Smoke(struct Game *game, float x, float y, int type);
+void Free_Smoke(struct Game *game);
 
 void Add_Obstacles(struct Game *game, float x1, float y1, int state, float x2, float y2);
 void Free_Obstacles(struct Game *game);
