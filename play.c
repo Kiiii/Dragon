@@ -1,8 +1,8 @@
-#include <allegro5/allegro.h>
+/*#include <allegro5/allegro.h>
 #include <allegro5/allegro_image.h>
 #include <allegro5/allegro_primitives.h>
 #include <allegro5/allegro_font.h>
-#include <allegro5/allegro_ttf.h>
+#include <allegro5/allegro_ttf.h>*/
 #include <stdio.h>
 #include <math.h>
 #include "play.h"
@@ -35,7 +35,7 @@ void Play_Game(struct Game *game)   {
             if(ftmp->type==0) {  //uzbrojony
                 al_draw_bitmap_region(game->play.fodder,   game->play.fodder_x, 0,   25,22,   ftmp->x1,ftmp->y1,  0);
                 if((rand() % 100 < 2) && ftmp->x1>game->play.dragon_pos_x+450 && game->play.dragon_lives>0){
-                    Add_Obstacles(game,ftmp->x1,ftmp->y1,2,game->play.dragon_pos_x+15,game->play.dragon_pos_y+110);
+                    Add_Obstacles(game,ftmp->x1,ftmp->y1,2,game->play.dragon_pos_x+15,game->play.dragon_pos_y+110);  //rzut widłami
                     if(rand() % 100 < 30){  //dźwięk rzutu wideł
                         if(rand() % 2 == 1){  game->play.in_whoosh1 = al_create_sample_instance(game->play.whoosh1);  al_attach_sample_instance_to_mixer(game->play.in_whoosh1, game->mixer_sfx);  al_set_sample_instance_gain(game->play.in_whoosh1, game->sfxvol-0.11);   al_play_sample_instance(game->play.in_whoosh1);   }
                         else {  game->play.in_whoosh2 = al_create_sample_instance(game->play.whoosh2);  al_attach_sample_instance_to_mixer(game->play.in_whoosh2, game->mixer_sfx);  al_set_sample_instance_gain(game->play.in_whoosh2, game->sfxvol-0.18);   al_play_sample_instance(game->play.in_whoosh2);   }
@@ -69,7 +69,7 @@ void Play_Game(struct Game *game)   {
                 else if(ftmp->lives==1)
                     al_draw_bitmap_region(game->play.fodder,   game->play.fodder_x+70, 540,   55,60,   ftmp->x1,ftmp->y1,  0);
                 if(rand() % 100  < 1)
-                    Add_Obstacles(game,ftmp->x1,ftmp->y1,1,0,0);
+                    Add_Obstacles(game,ftmp->x1,ftmp->y1,1,0,0); //wypuszczenie mąki
             }
             if(game->play.dragon_lives>0){ //przesuwa foddery, o ile smok żyje
                 ftmp->x1-=5;
@@ -131,17 +131,21 @@ void Play_Game(struct Game *game)   {
         struct Obstacles *otmp;
         otmp=game->ofirst;
         while(otmp){
+           // printf("%d\n",otmp->state);
             if(otmp->state==1){ //mąka
                 al_draw_bitmap_region(game->play.fodder,   245,otmp->frame_y,   48,38,   otmp->x1,otmp->y1,  0);
                 if((rand() % 100) <25)   otmp->frame_y+=38;
                 if(otmp->frame_y>=494)   otmp->frame_y=0;
-                if(game->play.dragon_lives>0)   otmp->x1-=((2+rand() % 3));
+                if(game->play.dragon_lives>0)
+                    otmp->x1-=((2+rand() % 3));
                 otmp->y1-=2;
+                if(otmp->y1<-20 || otmp->x1<-20) otmp->state=0; //mąka wyleciała za ekran
             }
             else if(otmp->state==2){ //widły
                 al_draw_rotated_bitmap(game->play.pitchfork, 10,10, otmp->x3,otmp->y3,  otmp->a*otmp->a*(54.235),   0); //obrót o 25 całkiem ładny
                 otmp->x3-=8;
                 otmp->y3 = otmp->a * otmp->x3 + otmp->b;
+                if(otmp->y3<-20 || otmp->x3<-20) otmp->state=0;
              }
             else if(otmp->state==3){ //owca
                 al_draw_rotated_bitmap(game->play.sheep_bmp, 18,15, otmp->x3,otmp->y3,  otmp->a*(1054.235)+ 2,   0);
@@ -151,17 +155,24 @@ void Play_Game(struct Game *game)   {
                     Add_Obstacles(game, otmp->x3, otmp->y3, 4, 0, (170 + rand() % 170)); //defragment 2!
                     Add_Obstacles(game, otmp->x3, otmp->y3, 4, 0, (340 + rand() % 170)); //defragment 3!
                     if(rand() % 2 == 1)   Add_Obstacles(game, otmp->x3, otmp->y3, 4, 0, (rand() % 500)); //defragment 4!
+                    Add_Obstacles(game, otmp->x3, otmp->y3, 5, 0, (900 - rand() % 200)); //defragment 5! w prawo
+                    Add_Obstacles(game, otmp->x3, otmp->y3, 5, 0, (rand() % 300)); //defragment 6! w prawo
                     otmp->state=0;
-                    game->play.in_sheep = al_create_sample_instance(game->play.sheep);   al_attach_sample_instance_to_mixer(game->play.in_sheep, game->mixer_sfx);   al_set_sample_instance_gain(game->play.in_sheep, game->sfxvol-0.1);   al_play_sample_instance(game->play.in_sheep);
+                    game->play.in_sheep = al_create_sample_instance(game->play.sheep);   al_attach_sample_instance_to_mixer(game->play.in_sheep, game->mixer_sfx);   al_set_sample_instance_gain(game->play.in_sheep, game->sfxvol-0.15);   al_play_sample_instance(game->play.in_sheep);
                 }
                 otmp->x3-=5.5;
                 otmp->y3=((otmp->a)*pow((otmp->x3-otmp->b),2)+(otmp->q))+510;
+                if(otmp->y3>600 || otmp->x3<-20) otmp->state=0;
             }
-            else if(otmp->state==4){
+            else if(otmp->state==4 || otmp->state==5){ //owczy defragmentator
                 al_draw_bitmap_region(game->play.fire,    otmp->frame_y, 15,   15,15,   otmp->x3,otmp->y3,  0);
-                otmp->x3-=8;
+                if(otmp->state==4) //w lewo leci
+                    otmp->x3-=8;
+                else
+                    otmp->x3+=5; //w prawo leci
                 otmp->y3 = otmp->a * otmp->x3 + otmp->b;
                 if(rand() % 100  <40)   Add_Smoke(game, otmp->x3, otmp->y3, 2); //krew od defragmentów
+                if(otmp->y3<-20 || otmp->y3>600 || otmp->x3<-20 || otmp->x3>950) otmp->state=0;
             }
             otmp=otmp->next;
         }

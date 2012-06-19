@@ -1,3 +1,5 @@
+//autorka: Agnieszka Kwiecińska//
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <allegro5/allegro.h>
@@ -72,7 +74,7 @@ int main(int argc, char **argv) {
     al_hide_mouse_cursor(game.display);
 //////////////////////*   MUZYKA I INNE DŹWIĘKI   *//////////////////////
     game.sfxvol=0.3;
-    game.musvol=0.25;
+    game.musvol=0.45;
     game.voice = al_create_voice(44100, ALLEGRO_AUDIO_DEPTH_INT16, ALLEGRO_CHANNEL_CONF_2);
     game.mixer = al_create_mixer(44100, ALLEGRO_AUDIO_DEPTH_FLOAT32, ALLEGRO_CHANNEL_CONF_2);
     game.mixer_music = al_create_mixer(44100, ALLEGRO_AUDIO_DEPTH_FLOAT32, ALLEGRO_CHANNEL_CONF_2);
@@ -86,9 +88,8 @@ int main(int argc, char **argv) {
 
     game.menu.song = al_load_sample("resources/1_song.wav"); //muzyka z menu
     game.menu.click1 = al_load_sample("resources/1_click1.wav"); //zwykły klik
-    game.menu.click2 = al_load_sample("resources/1_click2.wav"); //wychodząc klik
+    game.menu.click2 = al_load_sample("resources/1_click2.wav"); //wychodzący klik
     game.play.psong = al_load_sample("resources/2_song.wav"); //muzyka z gry
-   // game.play.expl = al_load_sample("resources/2_expl.wav"); //bum!
     game.play.flap1 = al_load_sample("resources/2_flap1.wav"); //flap!
     game.play.flap2 = al_load_sample("resources/2_flap2.wav"); //flap!
     game.play.flap3 = al_load_sample("resources/2_flap3.wav"); //flap!
@@ -96,19 +97,17 @@ int main(int argc, char **argv) {
     game.play.die = al_load_sample("resources/2_die.wav"); //ryk padającego smoka
     game.play.hit1 = al_load_sample("resources/2_hit1.wav"); //warknięcie obrywającego smoka
     game.play.hit2 = al_load_sample("resources/2_hit2.wav"); //warknięcie obrwającego smoka
-    //game.play.hutexpl = al_load_sample("resources/2_hutexpl.wav"); //wybuch domku
     game.play.whoosh1 = al_load_sample("resources/2_whoosh1.wav"); //rzut widłami
     game.play.whoosh2 = al_load_sample("resources/2_whoosh2.wav"); //rzut widłami
     game.play.lfire = al_load_sample("resources/2_launchfire.wav"); //zionięcie
-    game.play.sheep = al_load_sample("resources/2_sheep.wav"); //zionięcie
-    game.play.hiss = al_load_sample("resources/2_hiss.wav"); //zionięcie
+    game.play.sheep = al_load_sample("resources/2_sheep.wav"); //beczenie owcy
+    game.play.hiss = al_load_sample("resources/2_hiss.wav"); //ryk padającego smoka
 
-    game.menu.in_song = al_create_sample_instance(game.menu.song);        al_attach_sample_instance_to_mixer(game.menu.in_song, game.mixer_music);         al_set_sample_instance_gain(game.menu.in_song, game.musvol-0.05);        al_set_sample_instance_playmode(game.menu.in_song, ALLEGRO_PLAYMODE_LOOP);
+    game.menu.in_song = al_create_sample_instance(game.menu.song);        al_attach_sample_instance_to_mixer(game.menu.in_song, game.mixer_music);         al_set_sample_instance_gain(game.menu.in_song, game.musvol-0.15);        al_set_sample_instance_playmode(game.menu.in_song, ALLEGRO_PLAYMODE_LOOP);
     game.menu.in_click1 = al_create_sample_instance(game.menu.click1);        al_attach_sample_instance_to_mixer(game.menu.in_click1, game.mixer_sfx);        al_set_sample_instance_gain(game.menu.in_click1, game.sfxvol+0.1);
     game.menu.in_click2 = al_create_sample_instance(game.menu.click2);        al_attach_sample_instance_to_mixer(game.menu.in_click2, game.mixer_sfx);        al_set_sample_instance_gain(game.menu.in_click2, game.sfxvol+0.1);
 
-    game.play.in_psong = al_create_sample_instance(game.play.psong);        al_attach_sample_instance_to_mixer(game.play.in_psong, game.mixer_music);         al_set_sample_instance_gain(game.play.in_psong, game.musvol+0.2);        al_set_sample_instance_playmode(game.play.in_psong, ALLEGRO_PLAYMODE_LOOP);
-    //game.play.in_expl = al_create_sample_instance(game.play.expl);        al_attach_sample_instance_to_mixer(game.play.in_expl, game.mixer_sfx2);        al_set_sample_instance_gain(game.play.in_expl, game.sfxvol);
+    game.play.in_psong = al_create_sample_instance(game.play.psong);        al_attach_sample_instance_to_mixer(game.play.in_psong, game.mixer_music);         al_set_sample_instance_gain(game.play.in_psong, game.musvol);        al_set_sample_instance_playmode(game.play.in_psong, ALLEGRO_PLAYMODE_LOOP);
     game.play.in_flap1 = al_create_sample_instance(game.play.flap1);        al_attach_sample_instance_to_mixer(game.play.in_flap1, game.mixer_sfx);        al_set_sample_instance_gain(game.play.in_flap1, game.sfxvol);
     game.play.in_flap2 = al_create_sample_instance(game.play.flap2);        al_attach_sample_instance_to_mixer(game.play.in_flap2, game.mixer_sfx);        al_set_sample_instance_gain(game.play.in_flap2, game.sfxvol);
     game.play.in_flap3 = al_create_sample_instance(game.play.flap3);        al_attach_sample_instance_to_mixer(game.play.in_flap3, game.mixer_sfx);        al_set_sample_instance_gain(game.play.in_flap3, game.sfxvol);
@@ -116,13 +115,11 @@ int main(int argc, char **argv) {
     game.play.in_die = al_create_sample_instance(game.play.die);        al_attach_sample_instance_to_mixer(game.play.in_die, game.mixer_sfx);        al_set_sample_instance_gain(game.play.in_die, game.sfxvol);
     game.play.in_hit1 = al_create_sample_instance(game.play.hit1);        al_attach_sample_instance_to_mixer(game.play.in_hit1, game.mixer_sfx);        al_set_sample_instance_gain(game.play.in_hit1, game.sfxvol);
     game.play.in_hit2 = al_create_sample_instance(game.play.hit2);        al_attach_sample_instance_to_mixer(game.play.in_hit2, game.mixer_sfx);        al_set_sample_instance_gain(game.play.in_hit2, game.sfxvol);
-   // game.play.in_hutexpl = al_create_sample_instance(game.play.hutexpl);        al_attach_sample_instance_to_mixer(game.play.in_hutexpl, game.mixer_sfx);        al_set_sample_instance_gain(game.play.in_hutexpl, game.sfxvol);
     game.play.in_whoosh1 = al_create_sample_instance(game.play.whoosh1);        al_attach_sample_instance_to_mixer(game.play.in_whoosh1, game.mixer_sfx);        al_set_sample_instance_gain(game.play.in_whoosh1, game.sfxvol);
     game.play.in_whoosh2 = al_create_sample_instance(game.play.whoosh2);        al_attach_sample_instance_to_mixer(game.play.in_whoosh2, game.mixer_sfx);        al_set_sample_instance_gain(game.play.in_whoosh2, game.sfxvol);
     game.play.in_lfire = al_create_sample_instance(game.play.lfire);        al_attach_sample_instance_to_mixer(game.play.in_lfire, game.mixer_sfx2);        al_set_sample_instance_gain(game.play.in_lfire, game.sfxvol);
     game.play.in_sheep = al_create_sample_instance(game.play.sheep);        al_attach_sample_instance_to_mixer(game.play.in_sheep, game.mixer_sfx);        al_set_sample_instance_gain(game.play.in_sheep, game.sfxvol);
     game.play.in_hiss = al_create_sample_instance(game.play.hiss);        al_attach_sample_instance_to_mixer(game.play.in_hiss, game.mixer_sfx);        al_set_sample_instance_gain(game.play.in_hiss, game.sfxvol);
-
 //////////////////////*   INICJALIZACJA BITMAP   *//////////////////////
     game.menu.buttons = al_load_bitmap("resources/1_buttons.png");
     game.menu.cloud = al_load_bitmap("resources/1_clouds.png");
@@ -143,7 +140,6 @@ int main(int argc, char **argv) {
     game.play.dragon = al_load_bitmap("resources/2_smok.png");
     game.play.trees1 = al_load_bitmap("resources/2_trees1.png");
     game.play.trees2 = al_load_bitmap("resources/2_trees2.png");
-
 //////////////////////*   GŁÓWNA PĘTLA   *//////////////////////
     while(1){
         ALLEGRO_EVENT event;
@@ -187,7 +183,7 @@ int main(int argc, char **argv) {
         if(game.play.dragon_floured==false && al_key_down(&game.keyboard, ALLEGRO_KEY_SPACE) && (game.gamestate == 1) && (game.fireonce==0) && (game.pos_x>game.play.dragon_pos_x) && game.play.dragon_lives>0) {
 /*STRZAŁ*/  Fire_Bullet(&game); //wystrzelenie pocisku - dodanie elementu do listy jednokierunkowej
             game.fireonce=1;
-            //Add_Obstacles(&game, 848, 553, 3, 0, 0);
+           // Add_Obstacles(&game, 848, 553, 3, 0, 0);
             if(rand() % 100 < 50){ //dźwięk wystrzału
                 game.play.in_lfire = al_create_sample_instance(game.play.lfire);   al_attach_sample_instance_to_mixer(game.play.in_lfire, game.mixer_sfx2);   al_set_sample_instance_gain(game.play.in_lfire, game.sfxvol-0.1);   al_play_sample_instance(game.play.in_lfire);   }
             else al_play_sample_instance(game.play.in_lfire);
@@ -307,7 +303,7 @@ int main(int argc, char **argv) {
     al_destroy_event_queue(game.queue);
     al_destroy_font(game.sfont);
 
-    al_uninstall_audio();
+    //al_uninstall_audio();
     al_shutdown_ttf_addon();
     al_shutdown_font_addon();
 return 0;
@@ -319,28 +315,25 @@ return 0;
 *1.  Niemożność dodawania nowych pocisków do listy, gdy last zostanie usunięty jako pierwszy (lub po prostu nie jako ostatni).
 *2.  Dopracować celność (czasem nie nadąża ze sprawdzeniem dla każdego wieśniaka, czy akurat pocisk go walnął, bo pocisk zdąży się usunąć z listy).
 *3.  Zapisywanie wyników.
-*4.  Dodatkowy przycisk - options (tam będzie wyłączanie muzyki, instrukcja obsługi itp.).
-*5.  Rozdzielenie wyników (ikonka wieźniaka (x2,x1), owcy (x3), domku (x5) i punkty przy każdym; obok gdzieś suma wszystkich punktów).
+*4.  Dodatkowy przycisk - options i tam instrukcję gry też dać.
+*5.  Rozdzielenie wyników (ikonka wieśniaka (x2,x1), owcy (x2), domku (x3) i punkty przy każdym; obok gdzieś suma wszystkich punktów).
 *6.  Randomować fodder (nowe grafiki).
-7.  Special_Encounter(&game) i tam dwa if'y dla wartości jakiejś odpowiedzialnej za to zmiennej (dla owcy i zamku).
+ 7.  Special_Encounter(&game) i tam dwa if'y dla wartości jakiejś odpowiedzialnej za to zmiennej (dla owcy i zamku).
 *8.  Inna czcionka.
 *9.  Żywotność domków - 3 strzały.
 *10. Z pitagorasa dopasować prędkość lotu pocisku.
-*11. Zrobić trzy pliki .c i trzy nagłówkowe [main, menu, play].
-*12. System wybuchów wywala czasem grę --> śle zrobione dodawanie do listy.
+*11. Zrobić przynajmniej trzy pliki .c i trzy nagłówkowe [main, menu, play].
+*12. System wybuchów wywala czasem grę --> źle zrobione dodawanie do listy.
 *13. Żywotność smoka - 3 serduszka; za nisko -1, widły -1, chmura mąki [niemożność strzelania, +1 piksel w dół przez czas trwania].
 *14. Muzyka i dźwięki podczas walki.
 *15. Zmienić kursor.
 *16. Odwrotnie dodawać na listę [najstaszy element=first].
-*17. Dodawanie wyników - gdy się powtarza, do dopisuje jeszcze raz to samo.
-*18. Blond-pastuchy rzucają owczym defragmentatorem [na jakiejś wysokości wybuch i rozpirza na czter owce].
-*19. Przysick 'OPCJE' zamiast 'SCORED' i tam instrukcję gry też dać.
+*17. Dodawanie wyników - gdy się powtarza, do dopisuje jeszcze raz to samo - poprawić.
+*18. Blond-pastuchy rzucają owczym defragmentatorem [na jakiejś wysokości wybuch i rozpirza na owcę na fragmenty].
+
+* - zrobione
+~ - poniekąd uczynione
+= - zarzucone
+  - do zrobienia
 
 */
-
-
-
-
-/*    al_set_mixer_gain(game.mixer, 50.0); //od wersji 5.1 Allegro
-    al_set_mixer_gain(game.mixer_music, 0.5);
-    al_set_mixer_gain(game.mixer_sfx, 0.5); */

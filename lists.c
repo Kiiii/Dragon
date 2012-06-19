@@ -186,7 +186,7 @@ void Add_Obstacles(struct Game *game, float x1, float y1, int s, float x2, float
     tmp->x1=x1;
     tmp->y1=y1;
     tmp->x3=tmp->x1;
-    if(tmp->state==2 || tmp->state==4){  //dla mąki i defragmentów owczych
+    if(tmp->state==2 || tmp->state==4 || tmp->state==5){  //dla mąki i defragmentów owczych
         tmp->a=((y2 - tmp->y1)/(x2 - tmp->x1));
         tmp->b=(tmp->y1 - ((y2 - tmp->y1)/(x2 - tmp->x1))*tmp->x1);
         tmp->y3=tmp->a*tmp->x3+tmp->b;
@@ -198,7 +198,7 @@ void Add_Obstacles(struct Game *game, float x1, float y1, int s, float x2, float
             tmp->y3=(tmp->a*pow(tmp->x3-tmp->b,2)+tmp->q)+510;  //y = a*(x-p)^2 + q
     }
     tmp->frame_y=0;
-    if(tmp->state==4){  //frame_x dla defragmentów
+    if(tmp->state==4 || tmp->state==5){  //frame_x dla defragmentów
         if(rand() % 3 == 0)
             tmp->frame_y=0;
         else if(rand() % 3 == 1)
@@ -222,7 +222,7 @@ void Free_Obstacles(struct Game *game){
         tmp=game->ofirst;
         game->oprev=NULL;
         while(tmp!=NULL){
-            if(tmp->state==0 || tmp->x1<-50 || tmp->y1<-40 || tmp->x3<-50 || (tmp->state==3 && tmp->y3>600)) {
+            if(tmp->state==0){
                 if(tmp==game->ofirst) {
                     game->ofirst=game->ofirst->next;
                     free(tmp);
